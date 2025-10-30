@@ -1,11 +1,21 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react"
-import { motion } from "framer-motion"
-import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Gift, Ticket, Shirt, Calendar, Percent, Sparkles, MapPin, Mail, QrCode } from "lucide-react"
-import QRCode from "qrcode"
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Gift,
+  Ticket,
+  Shirt,
+  Calendar,
+  Percent,
+  Sparkles,
+  MapPin,
+  Mail,
+  QrCode,
+} from "lucide-react";
+import QRCode from "qrcode";
 
 const prizeIcons = {
   "Kostenloses Training": Gift,
@@ -14,7 +24,7 @@ const prizeIcons = {
   "100€ Gutschein": Sparkles,
   "T-Shirt": Shirt,
   "Ein Monat Training": Calendar,
-}
+};
 
 const prizeColors = {
   "Kostenloses Training": "#10b981",
@@ -23,21 +33,21 @@ const prizeColors = {
   "100€ Gutschein": "#f59e0b",
   "T-Shirt": "#ef4444",
   "Ein Monat Training": "#6366f1",
-}
+};
 
 interface PrizeClaimProps {
-  prize: string
-  userEmail: string
+  prize: string;
+  userEmail: string;
 }
 
 export function PrizeClaim({ prize, userEmail }: PrizeClaimProps) {
-  const [qrCodeUrl, setQrCodeUrl] = useState("")
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [qrCodeUrl, setQrCodeUrl] = useState("");
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const generateQRCode = async () => {
       try {
-        const qrData = `${window.location.origin}/${encodeURIComponent(userEmail)}`
+        const qrData = `${window.location.origin}/reward/${encodeURIComponent(userEmail)}`;
         const url = await QRCode.toDataURL(qrData, {
           width: 300,
           margin: 2,
@@ -45,18 +55,18 @@ export function PrizeClaim({ prize, userEmail }: PrizeClaimProps) {
             dark: "#000000",
             light: "#ffffff",
           },
-        })
-        setQrCodeUrl(url)
+        });
+        setQrCodeUrl(url);
       } catch (error) {
-        console.error("Error generating QR code:", error)
+        console.error("Error generating QR code:", error);
       }
-    }
+    };
 
-    generateQRCode()
-  }, [userEmail])
+    generateQRCode();
+  }, [userEmail]);
 
-  const Icon = prizeIcons[prize as keyof typeof prizeIcons] || Gift
-  const color = prizeColors[prize as keyof typeof prizeColors] || "#10b981"
+  const Icon = prizeIcons[prize as keyof typeof prizeIcons] || Gift;
+  const color = prizeColors[prize as keyof typeof prizeColors] || "#10b981";
 
   return (
     <motion.div
@@ -73,15 +83,24 @@ export function PrizeClaim({ prize, userEmail }: PrizeClaimProps) {
           transition={{ delay: 0.2, duration: 0.5 }}
           className="text-center mb-8"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-2xl">Herzlichen Glückwunsch!</h1>
-          <p className="text-xl text-white/90 drop-shadow-lg">Sie haben gewonnen:</p>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-2xl">
+            Herzlichen Glückwunsch!
+          </h1>
+          <p className="text-xl text-white/90 drop-shadow-lg">
+            Sie haben gewonnen:
+          </p>
         </motion.div>
 
         {/* Prize Display with Animation */}
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ delay: 0.4, duration: 0.5, type: "spring", bounce: 0.5 }}
+          transition={{
+            delay: 0.4,
+            duration: 0.5,
+            type: "spring",
+            bounce: 0.5,
+          }}
           className="flex flex-col items-center mb-8"
         >
           <motion.div
@@ -124,10 +143,14 @@ export function PrizeClaim({ prize, userEmail }: PrizeClaimProps) {
           <div className="flex items-start gap-3 mb-4">
             <Mail className="w-6 h-6 text-green-400 flex-shrink-0 mt-1" />
             <div>
-              <h3 className="text-lg font-semibold text-white mb-2">QR-Code per E-Mail gesendet!</h3>
+              <h3 className="text-lg font-semibold text-white mb-2">
+                QR-Code per E-Mail gesendet!
+              </h3>
               <p className="text-white/80 text-sm">
-                Wir haben Ihnen einen QR-Code an <span className="font-semibold">{userEmail}</span> gesendet. Zeigen Sie
-                diesen QR-Code im Studio vor, um Ihren Preis einzulösen.
+                Wir haben Ihnen einen QR-Code an{" "}
+                <span className="font-semibold">{userEmail}</span> gesendet.
+                Zeigen Sie diesen QR-Code im Studio vor, um Ihren Preis
+                einzulösen.
               </p>
             </div>
           </div>
@@ -147,7 +170,11 @@ export function PrizeClaim({ prize, userEmail }: PrizeClaimProps) {
             </div>
             {qrCodeUrl ? (
               <div className="bg-white p-4 rounded-lg">
-                <img src={qrCodeUrl || "/placeholder.svg"} alt="QR Code" className="w-full h-auto" />
+                <img
+                  src={qrCodeUrl || "/placeholder.svg"}
+                  alt="QR Code"
+                  className="w-full h-auto"
+                />
               </div>
             ) : (
               <div className="bg-white/20 p-4 rounded-lg flex items-center justify-center h-64">
@@ -168,18 +195,27 @@ export function PrizeClaim({ prize, userEmail }: PrizeClaimProps) {
           >
             <div className="flex items-center gap-2 mb-4">
               <MapPin className="w-5 h-5 text-white" />
-              <h3 className="text-lg font-semibold text-white">Besuchen Sie uns</h3>
+              <h3 className="text-lg font-semibold text-white">
+                Besuchen Sie uns
+              </h3>
             </div>
             <div className="mb-4">
-              <p className="text-white font-semibold mb-2">Super Jack Muay Thai</p>
+              <p className="text-white font-semibold mb-2">
+                Super Jack Muay Thai
+              </p>
               <p className="text-white/80 text-sm mb-4">
-                Kommen Sie zu unserem Studio in Berlin, um Ihren Preis abzuholen!
+                Kommen Sie zu unserem Studio in Berlin, um Ihren Preis
+                abzuholen!
               </p>
               <Button
                 asChild
                 className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white"
               >
-                <a href="https://maps.app.goo.gl/X5uttU5XCRLx6yxb8" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://maps.app.goo.gl/X5uttU5XCRLx6yxb8"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <MapPin className="w-4 h-4 mr-2" />
                   Auf Google Maps öffnen
                 </a>
@@ -210,10 +246,11 @@ export function PrizeClaim({ prize, userEmail }: PrizeClaimProps) {
           className="mt-6 text-center"
         >
           <p className="text-white/70 text-sm">
-            Bitte bringen Sie Ihren QR-Code und einen gültigen Ausweis mit, wenn Sie Ihren Preis abholen.
+            Bitte bringen Sie Ihren QR-Code und einen gültigen Ausweis mit, wenn
+            Sie Ihren Preis abholen.
           </p>
         </motion.div>
       </Card>
     </motion.div>
-  )
+  );
 }
