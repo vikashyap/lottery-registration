@@ -23,7 +23,7 @@ export async function sendPrizeEmail({
 }: SendPrizeEmailParams) {
   try {
     if (!resend) {
-      console.log("[v0] Resend API key not configured. Email not sent.");
+  console.log("Resend API key not configured. Email not sent.");
       return {
         success: false,
         error:
@@ -57,14 +57,14 @@ export async function sendPrizeEmail({
     });
 
     if (error) {
-      console.error("[v0] Error sending email:", error);
+  console.error("Error sending email:", error);
       return { success: false, error: error.message };
     }
 
-    console.log("[v0] Email sent successfully:", data);
+  console.log("Email sent successfully:", data);
     return { success: true, data };
   } catch (error) {
-    console.error("[v0] Error in sendPrizeEmail:", error);
+  console.error("Error in sendPrizeEmail:", error);
     return { success: false, error: String(error) };
   }
 }

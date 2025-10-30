@@ -38,7 +38,7 @@ export default function PrizeNotificationEmail({
           {/* Logo */}
           <Section style={logoSection}>
             <Img
-              src="https://cdn.prod.website-files.com/683b51dd412f8269a3d25bc1/683b577fbcb1b49516dc881d_sjmt-logo.svg"
+              src="/logo.svg"
               alt="Super Jack Muay Thai"
               width="200"
               style={logo}

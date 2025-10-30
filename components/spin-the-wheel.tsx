@@ -26,7 +26,7 @@ export function SpinTheWheel(props: Props) {
       <div className="text-center mb-6 md:mb-8">
         <div className="inline-block backdrop-blur-md bg-black/45 px-4 md:px-6 py-3 md:py-4 rounded-2xl border border-white/30">
           <img
-            src="https://cdn.prod.website-files.com/683b51dd412f8269a3d25bc1/683b577fbcb1b49516dc881d_sjmt-logo.svg"
+            src="/logo.svg"
             alt="Super Jack Muay Thai Logo"
             className="h-8 md:h-10 mx-auto mb-1"
           />

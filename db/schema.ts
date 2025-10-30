@@ -28,7 +28,7 @@ export const adminTable = pgTable("admin", {
 export const pricesTable = pgTable("prices", {
   id: serial("id").primaryKey(),
   items: jsonb("items")
-    .$type<Array<{ price: string; description?: string }>>()
+    .$type<Array<{ price: string; description?: string; color: string }>>()
     .notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

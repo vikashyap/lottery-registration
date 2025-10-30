@@ -24,7 +24,7 @@ export function PrizeWheel(props: Props) {
       id: index + 1,
       name: price.price,
       description: price.description || "Gift",
-      color: `hsl(${(index * 360) / prices.length}, 70%, 50%)`,
+      color: price.color,
     })) || [];
 
   const wonPrize = usePrizeStore()?.wonPrize;
@@ -44,7 +44,7 @@ export function PrizeWheel(props: Props) {
         userEmail: email,
         userName: name,
         prizeName: prize,
-        prizeColor: `hsl(${(Math.random() * 360) / Math.random()}, 70%, 50%)`,
+        prizeColor: prizeList.find((f) => f.name === name)?.color || "green",
       });
       toast.success(
         `Herzlichen Glückwunsch! Sie haben ${prize} gewonnen! Wir haben Ihnen eine E-Mail mit den Details Ihres Preises gesendet.`,
@@ -117,6 +117,7 @@ export function PrizeWheel(props: Props) {
           <path
             d={pathData}
             fill={prizeList[i].color}
+            style={{ opacity: 0.6 }}
             stroke="white"
             strokeWidth="3"
           />

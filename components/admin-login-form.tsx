@@ -89,7 +89,7 @@ export function AdminLoginForm() {
         <div className="mb-8 text-center">
           <div className="flex justify-center mb-4">
             <Image
-              src="https://cdn.prod.website-files.com/683b51dd412f8269a3d25bc1/683b577fbcb1b49516dc881d_sjmt-logo.svg"
+              src="/logo.svg"
               alt="Super Jack Muay Thai Logo"
               width={80}
               height={80}
