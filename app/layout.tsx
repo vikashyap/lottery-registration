@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import { AdminNav } from "@/components/admin-nav";
 import { isAdminValid } from "./actions/admin-valid";
+import { Suspense } from "react";
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
@@ -15,16 +16,23 @@ export const metadata: Metadata = {
   description: "Your authentic Muay Thai gym in Berlin",
 };
 
-export default async function RootLayout({
+async function AdminNavServer() {
+  const isAdmin = await isAdminValid();
+
+  return isAdmin ? <AdminNav /> : <></>;
+}
+
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isAdmin = await isAdminValid();
   return (
     <html lang="en">
       <body className={`font-sans antialiased`}>
-        {isAdmin && <AdminNav />}
+        <Suspense fallback={<>loading...</>}>
+          |<AdminNavServer />
+        </Suspense>
         {children}
         <Analytics />
         <Toaster position="top-center" richColors />

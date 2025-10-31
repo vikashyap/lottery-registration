@@ -4,7 +4,6 @@ import {
   Head,
   Heading,
   Html,
-  Img,
   Link,
   Preview,
   Section,
@@ -37,12 +36,11 @@ export default function PrizeNotificationEmail({
         <Container style={container}>
           {/* Logo */}
           <Section style={logoSection}>
-            <Img
-              src="https://lottery-registration.vercel.app/logo.svg"
-              alt="Super Jack Muay Thai"
-              width="200"
-              style={logo}
-            />
+            <Heading style={logoHeading}>SJMT</Heading>
+            <Text style={logoSubtitle}>SUPER JACK MUAY THAI</Text>
+            <Text style={logoTagline}>
+              Your authentic Muay Thai gym in Berlin
+            </Text>
           </Section>
 
           {/* Header */}
@@ -61,17 +59,13 @@ export default function PrizeNotificationEmail({
           {/* QR Code Section */}
           <Section style={qrSection}>
             <Text style={instructionText}>
-              Scannen Sie diesen QR-Code im Studio, um Ihren Preis einzulösen:
+              🎁 Klicken Sie auf den Link, um Ihren Preis einzulösen:
             </Text>
-            <Img
-              src={qrCodeDataUrl}
-              alt="QR Code"
-              width="200"
-              height="200"
-              style={qrCode}
-            />
+            <Link href={rewardUrl} style={linkButton}>
+              🎯 Preis jetzt einlösen 🎯
+            </Link>
             <Text style={smallText}>
-              Oder besuchen Sie:{" "}
+              💻 Link:{" "}
               <Link href={rewardUrl} style={link}>
                 {rewardUrl}
               </Link>
@@ -138,8 +132,30 @@ const logoSection = {
   backgroundColor: "#000000",
 };
 
-const logo = {
-  margin: "0 auto",
+const logoHeading = {
+  color: "#ffffff",
+  fontSize: "48px",
+  fontWeight: "bold",
+  margin: "0 0 8px",
+  padding: "0",
+  letterSpacing: "4px",
+};
+
+const logoSubtitle = {
+  color: "#f59e0b",
+  fontSize: "20px",
+  fontWeight: "bold",
+  margin: "0 0 4px",
+  padding: "0",
+  letterSpacing: "2px",
+};
+
+const logoTagline = {
+  color: "#cccccc",
+  fontSize: "14px",
+  margin: "0",
+  padding: "0",
+  fontStyle: "italic" as const,
 };
 
 const header = {
@@ -201,6 +217,20 @@ const instructionText = {
   fontSize: "16px",
   margin: "0 0 20px",
   fontWeight: "600",
+};
+
+const linkButton = {
+  backgroundColor: "#f59e0b",
+  borderRadius: "12px",
+  color: "#ffffff",
+  fontSize: "20px",
+  fontWeight: "bold",
+  textDecoration: "none",
+  textAlign: "center" as const,
+  display: "inline-block",
+  padding: "16px 32px",
+  margin: "0 auto 16px",
+  border: "3px solid #000000",
 };
 
 const qrCode = {
