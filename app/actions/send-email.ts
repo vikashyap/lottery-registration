@@ -45,7 +45,7 @@ export async function sendPrizeEmail({
 
     // Send email using Resend
     const { data, error } = await resend.emails.send({
-      from: "Super Jack Muay Thai <onboarding@resend.dev>", // Change this to your verified domain
+      from: "Super Jack Muay Thai <ucanfindlive.org>", // Change this to your verified domain
       to: [userEmail],
       subject: `🎉 Herzlichen Glückwunsch! Sie haben ${prizeName} gewonnen!`,
       react: PrizeNotificationEmail({
