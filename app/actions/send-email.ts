@@ -23,7 +23,7 @@ export async function sendPrizeEmail({
 }: SendPrizeEmailParams) {
   try {
     if (!resend) {
-  console.log("Resend API key not configured. Email not sent.");
+      console.log("Resend API key not configured. Email not sent.");
       return {
         success: false,
         error:
@@ -33,6 +33,7 @@ export async function sendPrizeEmail({
 
     // Generate QR code as data URL
     const rewardUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/reward?email=${encodeURIComponent(userEmail)}`;
+    console.log("reward url", rewardUrl);
     const qrCodeDataUrl = await QRCode.toDataURL(rewardUrl, {
       width: 400,
       margin: 2,
@@ -57,14 +58,14 @@ export async function sendPrizeEmail({
     });
 
     if (error) {
-  console.error("Error sending email:", error);
+      console.error("Error sending email:", error);
       return { success: false, error: error.message };
     }
 
-  console.log("Email sent successfully:", data);
+    console.log("Email sent successfully:", data);
     return { success: true, data };
   } catch (error) {
-  console.error("Error in sendPrizeEmail:", error);
+    console.error("Error in sendPrizeEmail:", error);
     return { success: false, error: String(error) };
   }
 }

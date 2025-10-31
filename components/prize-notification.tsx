@@ -38,7 +38,7 @@ export default function PrizeNotificationEmail({
           {/* Logo */}
           <Section style={logoSection}>
             <Img
-              src="/logo.svg"
+              src="https://lottery-registration.vercel.app/logo.svg"
               alt="Super Jack Muay Thai"
               width="200"
               style={logo}

@@ -3,16 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import QRCode from "qrcode";
 import { motion } from "framer-motion";
-import {
-  Sparkles,
-  Gift,
-  QrCodeIcon,
-  Tag,
-  CreditCard,
-  Ticket,
-  Shirt,
-  Trophy,
-} from "lucide-react";
+import { Sparkles, Gift, QrCodeIcon } from "lucide-react";
 import { PriceItemType } from "../types";
 import { IconMap } from "@/consts";
 
@@ -30,8 +21,8 @@ export function ScanClientPage(props: Props) {
       if (canvasRef.current) {
         try {
           // Generate QR code for the main page
-          const url =
-            typeof window !== "undefined" ? window.location.origin : "/";
+          const url = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}`;
+          typeof window !== "undefined" ? window.location.origin : "/";
           await QRCode.toCanvas(canvasRef.current, url, {
             width: 240,
             margin: 2,
