@@ -47,7 +47,7 @@ export function PrizeClaim({ prize, userEmail }: PrizeClaimProps) {
   useEffect(() => {
     const generateQRCode = async () => {
       try {
-        const qrData = `${window.location.origin}/reward/${encodeURIComponent(userEmail)}`;
+        const qrData = `${window.location.origin}/reward/?email=${encodeURIComponent(userEmail)}`;
         const url = await QRCode.toDataURL(qrData, {
           width: 300,
           margin: 2,

@@ -22,6 +22,7 @@ import {
 import QRCode from "qrcode";
 import { toast } from "sonner";
 import { updateUserByEmail } from "../actions/user-server";
+import { IconMap } from "@/consts";
 
 const prizeIcons = {
   "Kostenloses Training": Gift,
@@ -108,7 +109,7 @@ export function RewardPageContent(props: Props) {
     );
   }
 
-  const Icon = prizeIcons[userData.price as keyof typeof prizeIcons] || Gift;
+  const Icon = IconMap[userData.price as keyof typeof prizeIcons] || Gift;
   const color =
     prizeColors[userData.price as keyof typeof prizeColors] || "#10b981";
 

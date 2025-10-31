@@ -103,13 +103,14 @@ export function PrizeWheel(props: Props) {
 
       const pathData = `M ${centerX} ${centerY} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
 
-      const textAngle = segmentAngle * i + segmentAngle / 2 - 90;
+      const textAngle = segmentAngle * i + segmentAngle / 2;
       const textRadius = radius * 0.65;
       const textX =
-        centerX + textRadius * Math.cos((textAngle * Math.PI) / 180);
+        centerX + textRadius * Math.cos(((textAngle - 90) * Math.PI) / 180);
       const textY =
-        centerY + textRadius * Math.sin((textAngle * Math.PI) / 180);
+        centerY + textRadius * Math.sin(((textAngle - 90) * Math.PI) / 180);
 
+      const words = prizeList[i].name.split(" ");
       const Icon = IconMap[prizeList[i].description!] || Gift;
 
       segments.push(
@@ -117,23 +118,44 @@ export function PrizeWheel(props: Props) {
           <path
             d={pathData}
             fill={prizeList[i].color}
-            style={{ opacity: 0.6 }}
             stroke="white"
             strokeWidth="3"
           />
-          <g
-            transform={`translate(${textX}, ${textY}) rotate(${
-              textAngle + 90
-            })`}
-          >
-            <foreignObject x="-30" y="-30" width="60" height="60">
-              <div className="flex flex-col items-center justify-center h-full">
-                <Icon className="w-6 h-6 text-white drop-shadow-lg" />
-                <span className="text-white font-bold text-[10px] drop-shadow-lg text-center mt-1 leading-tight">
-                  {prizeList[i].name.split(" ").slice(0, 2).join(" ")}
-                </span>
+
+          <g transform={`translate(${textX}, ${textY}) rotate(${textAngle})`}>
+            {/* Icon positioned above the text */}
+            <foreignObject
+              x="-12"
+              y={-((words.length - 1) * 16) / 2 - 30}
+              width="24"
+              height="24"
+            >
+              <div className="w-full h-full flex items-center justify-center">
+                <Icon
+                  className="w-5 h-5 text-white drop-shadow-lg"
+                  style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))" }}
+                />
               </div>
             </foreignObject>
+
+            {/* Text labels */}
+            {words.map((word: any, idx: any) => (
+              <text
+                key={idx}
+                x="0"
+                y={idx * 16 - ((words.length - 1) * 16) / 2}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                className="fill-white font-bold text-[14px] md:text-[16px] drop-shadow-lg"
+                style={{
+                  paintOrder: "stroke",
+                  stroke: "rgba(0,0,0,0.4)",
+                  strokeWidth: "3px",
+                }}
+              >
+                {word}
+              </text>
+            ))}
           </g>
         </g>
       );
