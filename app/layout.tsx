@@ -28,8 +28,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`font-sans antialiased`}>
+    <html lang="en" className="h-screen">
+      <body className={`font-sans antialiased h-screen bg-black`}>
         <Suspense fallback={<>loading...</>}>
           |<AdminNavServer />
         </Suspense>
