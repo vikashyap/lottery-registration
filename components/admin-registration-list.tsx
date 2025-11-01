@@ -14,6 +14,8 @@ import {
   User,
   LogOut,
   Search,
+  Edit3,
+  Send,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,6 +24,8 @@ import { logOut } from "@/app/actions/logout";
 import { PriceItemType, UserType } from "@/app/types";
 import { IconMap } from "@/consts";
 import { Input } from "./ui/input";
+import { toast } from "sonner";
+import { EditPrizesModal } from "./edit-prizes-modal";
 
 export default function AdminRegistrationList({
   users,
@@ -34,6 +38,7 @@ export default function AdminRegistrationList({
     "all" | "claimed" | "unclaimed"
   >("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isEditPrizesOpen, setIsEditPrizesOpen] = useState(false); // State for modal
 
   const registrations = users.map((user, index) => {
     const iconString = prices.find((f) => f.price === user.price)?.description;
@@ -104,17 +109,36 @@ export default function AdminRegistrationList({
                     Registrierte Teilnehmer - Glücksrad Gewinnspiel
                   </p>
                 </div>
-                <Button
-                  onClick={() => {
-                    console.log("Logging out...");
-                    logOut();
-                  }}
-                  variant="outline"
-                  className="bg-red-500/20 border-red-500/50 text-white hover:bg-red-500/30 hover:border-red-500/70"
-                >
-                  <LogOut size={16} className="mr-2" />
-                  Abmelden
-                </Button>
+                <div className=" flex gap-4">
+                  <Button
+                    onClick={() => setIsEditPrizesOpen(true)}
+                    variant="outline"
+                    className="bg-blue-500/20 border-blue-500/50 text-white hover:bg-blue-500/30 hover:border-blue-500/70"
+                  >
+                    <Edit3 size={16} className="mr-2" />
+                    Preise bearbeiten
+                  </Button>
+
+                  <Button
+                    onClick={() => toast.info("Funktion kommt bald")}
+                    variant="outline"
+                    className="bg-purple-500/20 border-purple-500/50 text-white hover:bg-purple-500/30 hover:border-purple-500/70"
+                  >
+                    <Send size={16} className="mr-2" />
+                    Massen-E-Mail
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      console.log("Logging out...");
+                      logOut();
+                    }}
+                    variant="outline"
+                    className="bg-red-500/20 border-red-500/50 text-white hover:bg-red-500/30 hover:border-red-500/70"
+                  >
+                    <LogOut size={16} className="mr-2" />
+                    Abmelden
+                  </Button>
+                </div>
               </div>
 
               <div className="flex gap-4 mt-6 flex-wrap flex items-center justify-between">
@@ -295,6 +319,11 @@ export default function AdminRegistrationList({
           </motion.div>
         </div>
       </div>
+      <EditPrizesModal
+        prizes={prices}
+        open={isEditPrizesOpen}
+        onOpenChange={setIsEditPrizesOpen}
+      />
     </main>
   );
 }
