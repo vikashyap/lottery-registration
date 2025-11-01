@@ -83,6 +83,32 @@ export function PrizeWheel(props: Props) {
     }, 4000);
   };
 
+  const groupWordsIntoLines = (
+    text: string,
+    maxCharsPerLine = 20
+  ): string[] => {
+    const words = text.split(" ");
+    const lines: string[] = [];
+    let currentLine = "";
+
+    words.forEach((word) => {
+      if (currentLine.length === 0) {
+        currentLine = word;
+      } else if ((currentLine + " " + word).length <= maxCharsPerLine) {
+        currentLine += " " + word;
+      } else {
+        lines.push(currentLine);
+        currentLine = word;
+      }
+    });
+
+    if (currentLine.length > 0) {
+      lines.push(currentLine);
+    }
+
+    return lines;
+  };
+
   const createWheelSegments = () => {
     const segments = [];
     const segmentAngle = 360 / prizeList.length;
@@ -110,8 +136,7 @@ export function PrizeWheel(props: Props) {
       const textY =
         centerY + textRadius * Math.sin(((textAngle - 90) * Math.PI) / 180);
 
-      const words = prizeList[i].name.split(" ");
-      const Icon = IconMap[prizeList[i].description!] || Gift;
+      const lines = groupWordsIntoLines(prizeList[i].name, 18);
 
       segments.push(
         <g key={prizeList[i].id}>
@@ -123,37 +148,21 @@ export function PrizeWheel(props: Props) {
           />
 
           <g transform={`translate(${textX}, ${textY}) rotate(${textAngle})`}>
-            {/* Icon positioned above the text */}
-            <foreignObject
-              x="-12"
-              y={-((words.length - 1) * 16) / 2 - 30}
-              width="24"
-              height="24"
-            >
-              <div className="w-full h-full flex items-center justify-center">
-                <Icon
-                  className="w-5 h-5 text-white drop-shadow-lg"
-                  style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))" }}
-                />
-              </div>
-            </foreignObject>
-
-            {/* Text labels */}
-            {words.map((word: any, idx: any) => (
+            {lines.map((line, idx) => (
               <text
                 key={idx}
                 x="0"
-                y={idx * 16 - ((words.length - 1) * 16) / 2}
+                y={idx * 14 - ((lines.length - 1) * 14) / 2}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                className="fill-white font-bold text-[14px] md:text-[16px] drop-shadow-lg"
+                className="fill-white font-bold text-[12px] drop-shadow-lg"
                 style={{
                   paintOrder: "stroke",
                   stroke: "rgba(0,0,0,0.4)",
                   strokeWidth: "3px",
                 }}
               >
-                {word}
+                {line}
               </text>
             ))}
           </g>
@@ -193,13 +202,13 @@ export function PrizeWheel(props: Props) {
           </div>
 
           {/* Spinning wheel SVG */}
+
           <div className="relative w-full h-full">
             <svg
               viewBox="0 0 400 400"
               className="w-full h-full transition-transform duration-[4000ms] ease-out drop-shadow-2xl"
               style={{ transform: `rotate(${rotation}deg)` }}
             >
-              {/* Outer border circle */}
               <circle
                 cx="200"
                 cy="200"
@@ -209,23 +218,20 @@ export function PrizeWheel(props: Props) {
                 strokeWidth="8"
               />
 
-              {/* Wheel segments */}
               {createWheelSegments()}
 
-              {/* Center circle for button */}
               <circle cx="200" cy="200" r="50" fill="white" />
             </svg>
 
-            {/* Center spin button */}
             <div className="absolute inset-0 flex items-center justify-center">
               <Button
                 onClick={handleSpin}
                 disabled={isSpinning || disabled || wonPrize !== null}
-                className="w-24 h-24 rounded-full bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500 hover:from-yellow-300 hover:via-amber-400 hover:to-orange-400 shadow-2xl border-4 border-white disabled:opacity-50 transition-all hover:scale-110 active:scale-95"
+                className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500 hover:from-yellow-300 hover:via-amber-400 hover:to-orange-400 shadow-2xl border-4 border-white disabled:opacity-50 transition-all hover:scale-110 active:scale-95"
               >
-                <div className="flex flex-col items-center gap-1">
-                  <Sparkles className="w-8 h-8 text-white animate-pulse" />
-                  <span className="text-white font-bold text-sm drop-shadow-lg">
+                <div className="flex flex-col items-center gap-0.5 md:gap-1">
+                  <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-white animate-pulse" />
+                  <span className="text-white font-bold text-xs md:text-sm drop-shadow-lg">
                     {wonPrize ? "FERTIG" : isSpinning ? "..." : "DREH!"}
                   </span>
                 </div>
