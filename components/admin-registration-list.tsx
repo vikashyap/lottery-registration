@@ -16,6 +16,8 @@ import {
   Search,
   Edit3,
   Send,
+  LayoutGrid,
+  Table,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -39,6 +41,7 @@ export default function AdminRegistrationList({
   >("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [isEditPrizesOpen, setIsEditPrizesOpen] = useState(false); // State for modal
+  const [viewMode, setViewMode] = useState<"card" | "table">("card"); // Added view state for toggling
 
   const registrations = users.map((user, index) => {
     const iconString = prices.find((f) => f.price === user.price)?.description;
@@ -99,7 +102,7 @@ export default function AdminRegistrationList({
             className="mb-8"
           >
             {/* Header */}
-            <div className="backdrop-blur-xl bg-black/50 rounded-2xl border border-white/30 p-6 mb-6">
+            <div className="backdrop-blur-xl bg-black/50 rounded-2xl border border-white/30 p-6 mb-2">
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div>
                   <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
@@ -213,112 +216,255 @@ export default function AdminRegistrationList({
                 </div>
               </div>
             </div>
+            <div className="flex justify-start mb-2 gap-2">
+              <button
+                onClick={() => setViewMode("card")}
+                className={`backdrop-blur-xl border rounded-lg p-2 transition-all hover:scale-105 ${
+                  viewMode === "card"
+                    ? "bg-white/20 border-white/50 ring-2 ring-white/30"
+                    : "bg-white/5 border-white/20 hover:bg-white/10"
+                }`}
+                title="Kartenansicht"
+              >
+                <LayoutGrid size={20} className="text-white" />
+              </button>
+              <button
+                onClick={() => setViewMode("table")}
+                className={`backdrop-blur-xl border rounded-lg p-2 transition-all hover:scale-105 ${
+                  viewMode === "table"
+                    ? "bg-white/20 border-white/50 ring-2 ring-white/30"
+                    : "bg-white/5 border-white/20 hover:bg-white/10"
+                }`}
+                title="Tabellenansicht"
+              >
+                <Table size={20} className="text-white" />
+              </button>
+            </div>
 
             {/* Registration Cards Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-              {filteredRegistrations.map((registration, index) => {
-                const PrizeIcon = registration.prizeIcon;
+            {viewMode === "card" ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                {filteredRegistrations.map((registration, index) => {
+                  const PrizeIcon = registration.prizeIcon;
 
-                return (
-                  <motion.div
-                    key={registration.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    onClick={() => {
-                      window.location.href = `/reward?email=${encodeURIComponent(
-                        registration.email
-                      )}`;
-                    }}
-                    className="backdrop-blur-xl bg-black/40 rounded-xl border border-white/30 overflow-hidden hover:border-white/50 transition-all hover:scale-105 cursor-pointer"
-                  >
-                    {/* Prize Header with Icon */}
-                    <div
-                      className={`${registration.prizeColor} p-3 relative overflow-hidden`}
-                      style={{ background: registration.prizeColor }}
+                  return (
+                    <motion.div
+                      key={registration.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      onClick={() => {
+                        window.location.href = `/reward?email=${encodeURIComponent(
+                          registration.email
+                        )}`;
+                      }}
+                      className="backdrop-blur-xl bg-black/40 rounded-xl border border-white/30 overflow-hidden hover:border-white/50 transition-all hover:scale-105 cursor-pointer"
                     >
-                      <div className="absolute top-0 right-0 opacity-20">
-                        <PrizeIcon size={60} strokeWidth={1} />
-                      </div>
-                      <div className="relative z-10">
-                        <div className="flex items-center justify-between mb-1">
-                          <PrizeIcon size={20} className="text-white" />
+                      {/* Prize Header with Icon */}
+                      <div
+                        className={`${registration.prizeColor} p-3 relative overflow-hidden`}
+                        style={{ background: registration.prizeColor }}
+                      >
+                        <div className="absolute top-0 right-0 opacity-20">
+                          <PrizeIcon size={60} strokeWidth={1} />
                         </div>
-                        <h3 className="text-sm font-bold text-white leading-tight">
-                          {registration.prize}
-                        </h3>
-                      </div>
-                    </div>
-
-                    {/* User Information */}
-                    <div className="p-3 space-y-2">
-                      <div className="flex items-start gap-2">
-                        <User
-                          size={14}
-                          className="text-white/60 mt-0.5 flex-shrink-0"
-                        />
-                        <div className="min-w-0">
-                          <div className="text-xs text-white/60">Name</div>
-                          <div className="text-white text-xs font-medium truncate">
-                            {registration.name}
+                        <div className="relative z-10">
+                          <div className="flex items-center justify-between mb-1">
+                            <PrizeIcon size={20} className="text-white" />
                           </div>
+                          <h3 className="text-sm font-bold text-white leading-tight">
+                            {registration.prize}
+                          </h3>
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-2">
-                        <Mail
-                          size={14}
-                          className="text-white/60 mt-0.5 flex-shrink-0"
-                        />
-                        <div className="min-w-0">
-                          <div className="text-xs text-white/60">E-Mail</div>
-                          <div className="text-white text-xs truncate">
-                            {registration.email}
+                      {/* User Information */}
+                      <div className="p-3 space-y-2">
+                        <div className="flex items-start gap-2">
+                          <User
+                            size={14}
+                            className="text-white/60 mt-0.5 flex-shrink-0"
+                          />
+                          <div className="min-w-0">
+                            <div className="text-xs text-white/60">Name</div>
+                            <div className="text-white text-xs font-medium truncate">
+                              {registration.name}
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <div className="flex items-start gap-2">
-                        <Phone
-                          size={14}
-                          className="text-white/60 mt-0.5 flex-shrink-0"
-                        />
-                        <div className="min-w-0">
-                          <div className="text-xs text-white/60">Telefon</div>
-                          <div className="text-white text-xs">
-                            {registration.phone}
+                        <div className="flex items-start gap-2">
+                          <Mail
+                            size={14}
+                            className="text-white/60 mt-0.5 flex-shrink-0"
+                          />
+                          <div className="min-w-0">
+                            <div className="text-xs text-white/60">E-Mail</div>
+                            <div className="text-white text-xs truncate">
+                              {registration.email}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="flex justify-between items-end">
-                        <div className="pt-2 border-t border-white/10">
-                          <div className="text-xs text-white/60">
-                            Registriert
-                          </div>
-                          <div className="text-white text-xs">
-                            {registration.registeredAt}
+
+                        <div className="flex items-start gap-2">
+                          <Phone
+                            size={14}
+                            className="text-white/60 mt-0.5 flex-shrink-0"
+                          />
+                          <div className="min-w-0">
+                            <div className="text-xs text-white/60">Telefon</div>
+                            <div className="text-white text-xs">
+                              {registration.phone}
+                            </div>
                           </div>
                         </div>
-                        {registration.isClaimed ? (
-                          <Badge className="bg-emerald-500/90 text-white border-0 text-xs px-1.5 py-0">
-                            <CheckCircle2 size={10} className="mr-0.5" />
-                            Eingelöst
-                          </Badge>
-                        ) : (
-                          <Badge className="bg-amber-500/90 text-white border-0 text-xs px-1.5 py-0">
-                            <XCircle size={10} className="mr-0.5" />
-                            Ausstehend
-                          </Badge>
-                        )}
+                        <div className="flex justify-between items-end">
+                          <div className="pt-2 border-t border-white/10">
+                            <div className="text-xs text-white/60">
+                              Registriert
+                            </div>
+                            <div className="text-white text-xs">
+                              {registration.registeredAt}
+                            </div>
+                          </div>
+                          {registration.isClaimed ? (
+                            <Badge className="bg-emerald-500/90 text-white border-0 text-xs px-1.5 py-0">
+                              <CheckCircle2 size={10} className="mr-0.5" />
+                              Eingelöst
+                            </Badge>
+                          ) : (
+                            <Badge className="bg-amber-500/90 text-white border-0 text-xs px-1.5 py-0">
+                              <XCircle size={10} className="mr-0.5" />
+                              Ausstehend
+                            </Badge>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            ) : (
+              /* Table View */
+              <div className="backdrop-blur-xl bg-black/40 rounded-xl border border-white/30 overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-white/5 border-b border-white/20">
+                      <tr>
+                        <th className="text-left p-4 text-white/80 font-semibold text-sm">
+                          Name
+                        </th>
+                        <th className="text-left p-4 text-white/80 font-semibold text-sm">
+                          E-Mail
+                        </th>
+                        <th className="text-left p-4 text-white/80 font-semibold text-sm">
+                          Telefon
+                        </th>
+                        <th className="text-left p-4 text-white/80 font-semibold text-sm">
+                          Preis
+                        </th>
+                        <th className="text-left p-4 text-white/80 font-semibold text-sm">
+                          Status
+                        </th>
+                        <th className="text-left p-4 text-white/80 font-semibold text-sm">
+                          Registriert
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredRegistrations.map((registration, index) => {
+                        const PrizeIcon = registration.prizeIcon;
+                        return (
+                          <motion.tr
+                            key={registration.id}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.3, delay: index * 0.05 }}
+                            onClick={() => {
+                              window.location.href = `/reward?email=${encodeURIComponent(registration.email)}`;
+                            }}
+                            className="border-b border-white/10 hover:bg-white/5 cursor-pointer transition-colors"
+                          >
+                            <td className="p-4">
+                              <div className="flex items-center gap-2">
+                                <User size={16} className="text-white/60" />
+                                <span className="text-white text-sm font-medium">
+                                  {registration.name}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="p-4">
+                              <div className="flex items-center gap-2">
+                                <Mail size={16} className="text-white/60" />
+                                <span className="text-white text-sm">
+                                  {registration.email}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="p-4">
+                              <div className="flex items-center gap-2">
+                                <Phone size={16} className="text-white/60" />
+                                <span className="text-white text-sm">
+                                  {registration.phone}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="p-4">
+                              <div className="flex items-center gap-2">
+                                <div
+                                  className={`${registration.prizeColor} p-1.5 rounded-lg`}
+                                >
+                                  <PrizeIcon size={16} className="text-white" />
+                                </div>
+                                <span className="text-white text-sm">
+                                  {registration.prize}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="p-4">
+                              {registration.isClaimed ? (
+                                <Badge className="bg-emerald-500/90 text-white border-0 text-xs">
+                                  <CheckCircle2 size={12} className="mr-1" />
+                                  Eingelöst
+                                </Badge>
+                              ) : (
+                                <Badge className="bg-amber-500/90 text-white border-0 text-xs">
+                                  <XCircle size={12} className="mr-1" />
+                                  Ausstehend
+                                </Badge>
+                              )}
+                            </td>
+                            <td className="p-4">
+                              <span className="text-white text-sm">
+                                {registration.registeredAt}
+                              </span>
+                            </td>
+                          </motion.tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+            {/* Empty State */}
+            {filteredRegistrations.length === 0 && (
+              <div className="backdrop-blur-xl bg-black/40 rounded-xl border border-white/30 p-12 text-center">
+                <Search className="mx-auto mb-4 text-white/40" size={48} />
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  Keine Ergebnisse gefunden
+                </h3>
+                <p className="text-white/60">
+                  {searchQuery
+                    ? `Keine Registrierungen entsprechen "${searchQuery}"`
+                    : "Keine Registrierungen in dieser Kategorie"}
+                </p>
+              </div>
+            )}
           </motion.div>
         </div>
       </div>
+
       <EditPrizesModal
         prizes={prices}
         open={isEditPrizesOpen}
