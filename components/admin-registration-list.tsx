@@ -13,6 +13,7 @@ import {
   Phone,
   User,
   LogOut,
+  Search,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,76 +21,7 @@ import { useState, useEffect } from "react";
 import { logOut } from "@/app/actions/logout";
 import { PriceItemType, UserType } from "@/app/types";
 import { IconMap } from "@/consts";
-
-// Mock data for registered users
-const registrations = [
-  {
-    id: 1,
-    name: "Max Mustermann",
-    email: "max.mustermann@example.com",
-    phone: "+49 123 456789",
-    prize: "Kostenloses Training",
-    prizeIcon: Gift,
-    prizeColor: "bg-emerald-500",
-    isClaimed: true,
-    registeredAt: "2025-01-28 14:30",
-  },
-  {
-    id: 2,
-    name: "Anna Schmidt",
-    email: "anna.schmidt@example.com",
-    phone: "+49 987 654321",
-    prize: "15% Rabatt",
-    prizeIcon: Percent,
-    prizeColor: "bg-blue-500",
-    isClaimed: false,
-    registeredAt: "2025-01-28 15:45",
-  },
-  {
-    id: 3,
-    name: "Thomas Weber",
-    email: "thomas.weber@example.com",
-    phone: "+49 555 123456",
-    prize: "Ein Monat Training",
-    prizeIcon: Calendar,
-    prizeColor: "bg-indigo-500",
-    isClaimed: true,
-    registeredAt: "2025-01-28 16:20",
-  },
-  {
-    id: 4,
-    name: "Sarah Müller",
-    email: "sarah.mueller@example.com",
-    phone: "+49 777 888999",
-    prize: "T-Shirt",
-    prizeIcon: Shirt,
-    prizeColor: "bg-red-500",
-    isClaimed: false,
-    registeredAt: "2025-01-28 17:10",
-  },
-  {
-    id: 5,
-    name: "Michael Fischer",
-    email: "michael.fischer@example.com",
-    phone: "+49 333 444555",
-    prize: "100€ Gutschein",
-    prizeIcon: Ticket,
-    prizeColor: "bg-amber-500",
-    isClaimed: true,
-    registeredAt: "2025-01-28 18:00",
-  },
-  {
-    id: 6,
-    name: "Julia Becker",
-    email: "julia.becker@example.com",
-    phone: "+49 666 777888",
-    prize: "Keine Anmeldegebühr",
-    prizeIcon: Ticket,
-    prizeColor: "bg-purple-500",
-    isClaimed: false,
-    registeredAt: "2025-01-28 19:15",
-  },
-];
+import { Input } from "./ui/input";
 
 export default function AdminRegistrationList({
   users,
@@ -101,6 +33,7 @@ export default function AdminRegistrationList({
   const [activeFilter, setActiveFilter] = useState<
     "all" | "claimed" | "unclaimed"
   >("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const registrations = users.map((user, index) => {
     const iconString = prices.find((f) => f.price === user.price)?.description;
@@ -124,6 +57,15 @@ export default function AdminRegistrationList({
   const filteredRegistrations = registrations.filter((registration) => {
     if (activeFilter === "claimed") return registration.isClaimed;
     if (activeFilter === "unclaimed") return !registration.isClaimed;
+
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      const matchesName = registration.name.toLowerCase().includes(query);
+      const matchesEmail = registration.email.toLowerCase().includes(query);
+      const matchesPhone = registration?.phone?.toLowerCase().includes(query);
+
+      if (!matchesName && !matchesEmail && !matchesPhone) return false;
+    }
     return true;
   });
 
@@ -175,52 +117,76 @@ export default function AdminRegistrationList({
                 </Button>
               </div>
 
-              <div className="flex gap-4 mt-6 flex-wrap">
-                <button
-                  onClick={() => setActiveFilter("claimed")}
-                  className={`backdrop-blur-md border rounded-xl px-4 py-2 transition-all hover:scale-105 ${
-                    activeFilter === "claimed"
-                      ? "bg-emerald-500/40 border-emerald-500/80 ring-2 ring-emerald-500/50"
-                      : "bg-emerald-500/20 border-emerald-500/50"
-                  }`}
-                >
-                  <div className="text-emerald-400 text-sm font-medium">
-                    Eingelöst
+              <div className="flex gap-4 mt-6 flex-wrap flex items-center justify-between">
+                <div className="flex gap-4">
+                  <button
+                    onClick={() => setActiveFilter("claimed")}
+                    className={`backdrop-blur-md border rounded-xl px-4 py-2 transition-all hover:scale-105 ${
+                      activeFilter === "claimed"
+                        ? "bg-emerald-500/40 border-emerald-500/80 ring-2 ring-emerald-500/50"
+                        : "bg-emerald-500/20 border-emerald-500/50"
+                    }`}
+                  >
+                    <div className="text-emerald-400 text-sm font-medium">
+                      Eingelöst
+                    </div>
+                    <div className="text-white text-2xl font-bold">
+                      {claimedCount}
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setActiveFilter("unclaimed")}
+                    className={`backdrop-blur-md border rounded-xl px-4 py-2 transition-all hover:scale-105 ${
+                      activeFilter === "unclaimed"
+                        ? "bg-amber-500/40 border-amber-500/80 ring-2 ring-amber-500/50"
+                        : "bg-amber-500/20 border-amber-500/50"
+                    }`}
+                  >
+                    <div className="text-amber-400 text-sm font-medium">
+                      Ausstehend
+                    </div>
+                    <div className="text-white text-2xl font-bold">
+                      {unclaimedCount}
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setActiveFilter("all")}
+                    className={`backdrop-blur-md border rounded-xl px-4 py-2 transition-all hover:scale-105 ${
+                      activeFilter === "all"
+                        ? "bg-blue-500/40 border-blue-500/80 ring-2 ring-blue-500/50"
+                        : "bg-blue-500/20 border-blue-500/50"
+                    }`}
+                  >
+                    <div className="text-blue-400 text-sm font-medium">
+                      Gesamt
+                    </div>
+                    <div className="text-white text-2xl font-bold">
+                      {totalRegistrations}
+                    </div>
+                  </button>
+                </div>
+                {/* Search Input */}
+                <div className="flex-1 min-w-[280px] max-w-md">
+                  <div className="relative">
+                    <Search
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-white/60"
+                      size={20}
+                    />
+                    <Input
+                      type="text"
+                      placeholder="Suche nach Name, E-Mail oder Telefon..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-10 bg-white/10 border-white/30 text-white placeholder:text-white/60 focus:border-white/50 focus:ring-white/20"
+                    />
                   </div>
-                  <div className="text-white text-2xl font-bold">
-                    {claimedCount}
-                  </div>
-                </button>
-                <button
-                  onClick={() => setActiveFilter("unclaimed")}
-                  className={`backdrop-blur-md border rounded-xl px-4 py-2 transition-all hover:scale-105 ${
-                    activeFilter === "unclaimed"
-                      ? "bg-amber-500/40 border-amber-500/80 ring-2 ring-amber-500/50"
-                      : "bg-amber-500/20 border-amber-500/50"
-                  }`}
-                >
-                  <div className="text-amber-400 text-sm font-medium">
-                    Ausstehend
-                  </div>
-                  <div className="text-white text-2xl font-bold">
-                    {unclaimedCount}
-                  </div>
-                </button>
-                <button
-                  onClick={() => setActiveFilter("all")}
-                  className={`backdrop-blur-md border rounded-xl px-4 py-2 transition-all hover:scale-105 ${
-                    activeFilter === "all"
-                      ? "bg-blue-500/40 border-blue-500/80 ring-2 ring-blue-500/50"
-                      : "bg-blue-500/20 border-blue-500/50"
-                  }`}
-                >
-                  <div className="text-blue-400 text-sm font-medium">
-                    Gesamt
-                  </div>
-                  <div className="text-white text-2xl font-bold">
-                    {totalRegistrations}
-                  </div>
-                </button>
+                  {searchQuery && (
+                    <div className="mt-1 text-xs text-white/80">
+                      {filteredRegistrations.length} Ergebnis
+                      {filteredRegistrations.length !== 1 ? "se" : ""} gefunden
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
