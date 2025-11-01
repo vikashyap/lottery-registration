@@ -109,23 +109,23 @@ export default function AdminRegistrationList({
                     Registrierte Teilnehmer - Glücksrad Gewinnspiel
                   </p>
                 </div>
-                <div className=" flex gap-4">
+                <div className=" flex gap-4 items-center">
                   <Button
                     onClick={() => setIsEditPrizesOpen(true)}
                     variant="outline"
-                    className="bg-blue-500/20 border-blue-500/50 text-white hover:bg-blue-500/30 hover:border-blue-500/70"
+                    className="backdrop-blur-xl bg-blue-500/10 border border-blue-500/30 text-white hover:bg-blue-500/20 hover:border-blue-500/50 hover:scale-105 transition-all duration-200 rounded-full px-3 md:px-4 py-2 text-xs md:text-sm shadow-lg"
                   >
-                    <Edit3 size={16} className="mr-2" />
-                    Preise bearbeiten
+                    <Edit3 size={16} className="md:mr-2" />
+                    <span className="hidden md:inline">Preise bearbeiten</span>
                   </Button>
 
                   <Button
                     onClick={() => toast.info("Funktion kommt bald")}
                     variant="outline"
-                    className="bg-purple-500/20 border-purple-500/50 text-white hover:bg-purple-500/30 hover:border-purple-500/70"
+                    className="backdrop-blur-xl bg-purple-500/10 border border-purple-500/30 text-white hover:bg-purple-500/20 hover:border-purple-500/50 hover:scale-105 transition-all duration-200 rounded-full px-3 md:px-4 py-2 text-xs md:text-sm shadow-lg"
                   >
-                    <Send size={16} className="mr-2" />
-                    Massen-E-Mail
+                    <Send size={16} className="md:mr-2" />
+                    <span className="hidden md:inline">Massen-E-Mail</span>
                   </Button>
                   <Button
                     onClick={() => {
@@ -133,10 +133,10 @@ export default function AdminRegistrationList({
                       logOut();
                     }}
                     variant="outline"
-                    className="bg-red-500/20 border-red-500/50 text-white hover:bg-red-500/30 hover:border-red-500/70"
+                    className="backdrop-blur-xl bg-red-500/10 border border-red-500/30 text-white hover:bg-red-500/20 hover:border-red-500/50 hover:scale-105 transition-all duration-200 rounded-full px-3 md:px-4 py-2 text-xs md:text-sm shadow-lg"
                   >
-                    <LogOut size={16} className="mr-2" />
-                    Abmelden
+                    <LogOut size={16} className="md:mr-2" />
+                    <span className="hidden md:inline">Abmelden</span>
                   </Button>
                 </div>
               </div>
