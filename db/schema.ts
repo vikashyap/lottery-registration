@@ -6,6 +6,7 @@ import {
   serial,
   timestamp,
   jsonb,
+  date,
 } from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable("users", {
@@ -31,4 +32,13 @@ export const pricesTable = pgTable("prices", {
     .$type<Array<{ price: string; description?: string; color: string }>>()
     .notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const membersTable = pgTable("members", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  status: varchar("status", { length: 50 }),
+  geburtstag: date("geburtstag"), // stores as YYYY-MM-DD
+  nachname: varchar("nachname", { length: 100 }),
+  vorname: varchar("vorname", { length: 100 }),
 });

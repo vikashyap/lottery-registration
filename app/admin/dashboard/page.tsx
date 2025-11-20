@@ -10,6 +10,7 @@ async function AdminRegisteredPage() {
   if (!isValid) {
     redirect("/admin");
   }
+
   const users = await getUsers();
   console.log("users", users);
   const prices = await getPrices();

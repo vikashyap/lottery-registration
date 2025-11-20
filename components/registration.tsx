@@ -4,13 +4,14 @@ import { motion } from "framer-motion";
 import { PrizeWheel } from "./prize-wheel";
 import { RegistrationForm } from "./registration-form";
 import { Suspense } from "react";
-import { PriceItemType } from "@/app/types";
+import { MemberType, PriceItemType } from "@/app/types";
 
 interface Props {
   prices: PriceItemType[];
+  members: MemberType[];
 }
 
-export function Registration({ prices }: Props) {
+export function Registration({ prices, members }: Props) {
   const isRegistered = usePrizeStore()?.isRegistered;
   if (isRegistered) {
     return null;
@@ -81,7 +82,7 @@ export function Registration({ prices }: Props) {
 
         {/* Registration Form */}
         <div className="order-1 lg:order-2 flex">
-          <RegistrationForm />
+          <RegistrationForm members={members} />
         </div>
       </div>
     </motion.div>

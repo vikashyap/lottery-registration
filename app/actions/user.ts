@@ -1,4 +1,4 @@
-import { usersTable } from "@/db/schema";
+import { membersTable, usersTable } from "@/db/schema";
 import { drizzle } from "drizzle-orm/neon-http";
 import { cacheTag, revalidateTag, updateTag } from "next/cache";
 import { eq } from "drizzle-orm";
@@ -43,6 +43,12 @@ async function getUserByEmail(email: string) {
     .where(eq(usersTable.email, email))
     .limit(1);
   return user[0] ?? null;
+}
+
+export async function getMembers() {
+  "use cache";
+  cacheTag("members", "max"); // optional: for caching logic
+  return db.select().from(membersTable);
 }
 
 async function updateUserPriceByEmail(email: string, price: string) {

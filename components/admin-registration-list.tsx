@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useEffectEvent } from "react";
 import { logOut } from "@/app/actions/logout";
 import { PriceItemType, UserType } from "@/app/types";
 import { IconMap } from "@/consts";
@@ -42,6 +42,29 @@ export default function AdminRegistrationList({
   const [searchQuery, setSearchQuery] = useState("");
   const [isEditPrizesOpen, setIsEditPrizesOpen] = useState(false); // State for modal
   const [viewMode, setViewMode] = useState<"card" | "table">("card"); // Added view state for toggling
+
+  const [data, setData] = useState([]);
+
+  // Stable handler with latest closure using useEffectEvent
+  const handleMessage = useEffectEvent((event: MessageEvent) => {
+    const newEvent = JSON.parse(event.data);
+    console.log("event.data", newEvent);
+  });
+
+  useEffect(() => {
+    const es = new EventSource("/api/stream-users");
+
+    // Use the stable handler here
+    es.onmessage = handleMessage;
+
+    es.onerror = () => {
+      es.close();
+    };
+
+    return () => {
+      es.close();
+    };
+  }, [handleMessage]);
 
   const registrations = users.map((user, index) => {
     const iconString = prices.find((f) => f.price === user.price)?.description;
