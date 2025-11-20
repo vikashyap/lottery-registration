@@ -51,21 +51,6 @@ export default function AdminRegistrationList({
     console.log("event.data", newEvent);
   });
 
-  useEffect(() => {
-    const es = new EventSource("/api/stream-users");
-
-    // Use the stable handler here
-    es.onmessage = handleMessage;
-
-    es.onerror = () => {
-      es.close();
-    };
-
-    return () => {
-      es.close();
-    };
-  }, [handleMessage]);
-
   const registrations = users.map((user, index) => {
     const iconString = prices.find((f) => f.price === user.price)?.description;
     return {
