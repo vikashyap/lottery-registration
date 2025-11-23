@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+
   Gift,
   Tag,
   CreditCard,
@@ -17,6 +18,8 @@ import {
   Shirt,
   Trophy,
   Save,
+  Trash2,
+  Plus,
 } from "lucide-react";
 import { PriceItemType } from "@/app/types";
 import { IconMap } from "@/consts";
@@ -61,12 +64,53 @@ export function EditPrizesModal({
   });
   const [prizes, setPrizes] = useState<Prize[]>(sPrizes);
 
+  // Update local state when props change
+  useEffect(() => {
+    if (open) {
+      const newPrizes = pPrizes?.map((p, i) => {
+        const icon = p.description as keyof typeof prizeIcons;
+        return {
+          id: i++,
+          name: p.price,
+          icon,
+          color: p.color,
+        };
+      });
+      setPrizes(newPrizes || []);
+    }
+  }, [open, pPrizes]);
+
   const handlePrizeNameChange = (id: number, newName: string) => {
     setPrizes((prev) =>
       prev.map((prize) =>
         prize.id === id ? { ...prize, name: newName } : prize
       )
     );
+  };
+
+  const handleDeletePrize = (id: number) => {
+    if (prizes.length <= 3) {
+      toast.error("Mindestens 3 Preise müssen vorhanden sein!");
+      return;
+    }
+    setPrizes((prev) => prev.filter((p) => p.id !== id));
+  };
+
+  const handleAddPrize = () => {
+    if (prizes.length >= 6) {
+      toast.error("Maximal 6 Preise erlaubt!");
+      return;
+    }
+    const newId = Math.max(...prizes.map((p) => p.id), 0) + 1;
+    setPrizes((prev) => [
+      ...prev,
+      {
+        id: newId,
+        name: "",
+        icon: "Gift",
+        color: "#ec4899", // Default pink color
+      },
+    ]);
   };
 
   const handleSave = async () => {
@@ -114,6 +158,15 @@ export function EditPrizesModal({
                 key={prize.id}
                 className="flex items-center gap-4 p-4 rounded-lg border border-white/20 bg-white/5 hover:bg-white/10 transition-colors"
               >
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleDeletePrize(prize.id)}
+                  className="text-white/40 hover:text-red-400 hover:bg-white/5"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </Button>
+
                 <div
                   className="flex items-center justify-center w-12 h-12 rounded-lg flex-shrink-0"
                   style={{ backgroundColor: prize.color }}
@@ -134,15 +187,21 @@ export function EditPrizesModal({
                     placeholder="Preis Name eingeben..."
                   />
                 </div>
-
-                <div className="text-xs text-white/60 flex flex-col gap-1">
-                  <div>Farbe: {prize.color}</div>
-                  <div>Icon: {prize.icon}</div>
-                </div>
               </div>
             );
           })}
         </div>
+
+        {prizes.length < 6 && (
+          <Button
+            onClick={handleAddPrize}
+            variant="outline"
+            className="w-full mt-4 border-dashed border-white/30 bg-white/5 hover:bg-white/10 text-white/60 hover:text-white"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Preis hinzufügen
+          </Button>
+        )}
 
         <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-white/20">
           <Button
