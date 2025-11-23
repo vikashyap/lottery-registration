@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -53,6 +54,7 @@ export function EditPrizesModal({
   onOpenChange,
   prizes: pPrizes,
 }: EditPrizesModalProps) {
+  const router = useRouter();
   const sPrizes = pPrizes?.map((p, i) => {
     const icon = p.description as keyof typeof prizeIcons;
     return {
@@ -122,7 +124,8 @@ export function EditPrizesModal({
       };
     });
     try {
-      updatePrizes({ items: savingPrizes });
+      await updatePrizes({ items: savingPrizes });
+      router.refresh();
       toast.success(
         "Preis aktualisiert! 🎉 Ab sofort gelten die neuen Preise 💶✨",
         {
