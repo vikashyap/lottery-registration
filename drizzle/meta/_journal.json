@@ -36,6 +36,13 @@
       "when": 1761777222932,
       "tag": "0004_steep_captain_stacy",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1764759478907,
+      "tag": "0005_fluffy_harpoon",
+      "breakpoints": true
     }
   ]
 }

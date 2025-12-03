@@ -8,10 +8,12 @@ import { PriceItemType } from "@/app/types";
 
 interface Props {
   prices: PriceItemType[];
+  birthdayPrizes?: PriceItemType[];
 }
 
 export function SpinTheWheel(props: Props) {
   const isRegistered = usePrizeStore()?.isRegistered;
+  const isBirthdayUser = usePrizeStore()?.isBirthdayUser;
   const wonPrize = usePrizeStore()?.wonPrize;
   if (!isRegistered || wonPrize) {
     return null;
@@ -74,7 +76,7 @@ export function SpinTheWheel(props: Props) {
       {/* Centered Prize Wheel */}
       <div className="flex justify-center">
         <div className="w-full max-w-2xl">
-          <PrizeWheel prices={props.prices} />
+          <PrizeWheel prices={isBirthdayUser && props.birthdayPrizes?.length ? props.birthdayPrizes : props.prices} />
         </div>
       </div>
     </motion.div>

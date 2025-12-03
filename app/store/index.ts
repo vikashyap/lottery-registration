@@ -5,11 +5,13 @@ type PrizeState = {
   wonPrize: string | null;
   userEmail: string;
   userName: string;
+  isBirthdayUser: boolean;
 
   setIsRegistered: (v: boolean) => void;
   setWonPrize: (prize: string | null) => void;
   setUserEmail: (email: string) => void;
   setUserName: (email: string) => void;
+  setIsBirthdayUser: (v: boolean) => void;
   reset: () => void;
 };
 
@@ -18,6 +20,7 @@ const initialState = {
   wonPrize: null as string | null,
   userEmail: "",
   userName: "",
+  isBirthdayUser: false,
 };
 
 export const usePrizeStore = create<PrizeState>((set) => ({
@@ -26,6 +29,7 @@ export const usePrizeStore = create<PrizeState>((set) => ({
   setWonPrize: (prize) => set({ wonPrize: prize }),
   setUserEmail: (email) => set({ userEmail: email }),
   setUserName: (name) => set({ userName: name }),
+  setIsBirthdayUser: (v) => set({ isBirthdayUser: v }),
   reset: () => set(initialState),
 }));
 

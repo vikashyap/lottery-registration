@@ -5,7 +5,9 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Sparkles, Mail, User, Phone, Calendar } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { Sparkles, Mail, User, Phone, Calendar as CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import * as z from "zod";
 import { toast } from "sonner";
@@ -116,6 +118,7 @@ export function RegistrationForm(props: Props) {
   const setIsRegistered = usePrizeStore()?.setIsRegistered;
   const setUserEmail = usePrizeStore()?.setUserEmail;
   const setUserName = usePrizeStore()?.setUserName;
+  const setIsBirthdayUser = usePrizeStore()?.setIsBirthdayUser;
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -124,6 +127,7 @@ export function RegistrationForm(props: Props) {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
 
   const onRegistrationComplete = (formData: {
     name: string;
@@ -193,6 +197,14 @@ export function RegistrationForm(props: Props) {
         email: validatedData.email,
         phone: validatedData.phone!,
       });
+      
+      // Set birthday user status based on whether they went through the birthday check
+      if (checkStep === "dob") {
+        setIsBirthdayUser(true);
+      } else {
+        setIsBirthdayUser(false);
+      }
+
       onRegistrationComplete({
         name: validatedData.name,
         email: validatedData.email,
@@ -220,6 +232,18 @@ export function RegistrationForm(props: Props) {
     if (value.length > 7) value = value.slice(0, 7) + "-" + value.slice(7, 10);
     if (value.length > 10) value = value.slice(0, 10);
     setDob(value);
+  }
+
+  function handleDateSelect(date: Date | undefined) {
+    if (date) {
+      // Format date as YYYY-MM-DD
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+      setDob(formattedDate);
+      setCalendarOpen(false);
+    }
   }
 
   return (
@@ -292,17 +316,37 @@ export function RegistrationForm(props: Props) {
                 <label className="text-white font-medium drop-shadow-md text-sm">
                   Geburtsdatum
                 </label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/70" />
-                  <Input
-                    type="text"
-                    placeholder="Geburtsdatum (JJJJ-MM-TT)"
-                    value={dob}
-                    onChange={handleDobChange}
-                    maxLength={10}
-                    className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/60"
-                  />
-                </div>
+                <Popover open={calendarOpen} onOpenChange={setCalendarOpen} modal={true}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start text-left font-normal bg-white/10 border-white/20 text-white hover:bg-white/20 hover:text-white"
+                    >
+                      <CalendarIcon className="mr-2 h-5 w-5 text-white/70" />
+                      {dob || <span className="text-white/60">Geburtsdatum (JJJJ-MM-TT)</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 bg-black/95 border-white/30" align="center" sideOffset={5}>
+                    <Calendar
+                      mode="single"
+                      selected={dob ? new Date(dob) : undefined}
+                      onSelect={handleDateSelect}
+                      defaultMonth={dob ? new Date(dob) : undefined}
+                      disabled={(date) => {
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        const maxDate = new Date(today);
+                        maxDate.setDate(maxDate.getDate() + 35);
+                        return date > maxDate || date < new Date("1900-01-01");
+                      }}
+                      initialFocus
+                      captionLayout="dropdown"
+                      fromYear={1900}
+                      toYear={new Date().getFullYear()}
+                      className="text-white"
+                    />
+                  </PopoverContent>
+                </Popover>
                 {errors.dob && (
                   <p className="text-red-300 text-xs drop-shadow-md">
                     {errors.dob}

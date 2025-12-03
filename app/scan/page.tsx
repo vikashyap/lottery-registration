@@ -16,7 +16,7 @@ async function ScanPage(props: Props) {
 }
 
 export default async function Serverpage() {
-  const prizes = await getPrices();
+  const { standard: prizes } = await getPrices();
   return (
     <Suspense fallback={<Loading />}>
       <ScanPage prizes={prizes} />

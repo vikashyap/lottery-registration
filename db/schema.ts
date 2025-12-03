@@ -31,6 +31,8 @@ export const pricesTable = pgTable("prices", {
   items: jsonb("items")
     .$type<Array<{ price: string; description?: string; color: string }>>()
     .notNull(),
+  birthday_items: jsonb("birthday_items")
+    .$type<Array<{ price: string; description?: string; color: string }>>(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

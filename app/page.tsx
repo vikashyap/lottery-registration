@@ -7,7 +7,7 @@ import { getMembers } from "./actions/user";
 import { Suspense } from "react";
 
 async function LotteryContent() {
-  const prices = await getPrices();
+  const { standard: prices, birthday } = await getPrices();
   const members = await getMembers();
   
   return (
@@ -18,7 +18,7 @@ async function LotteryContent() {
           key="registration"
           members={members}
         />
-        <SpinTheWheel key="spin-the-wheel" prices={prices} />
+        <SpinTheWheel key="spin-the-wheel" prices={prices} birthdayPrizes={birthday} />
         <WonThePrize key="won-the-prize" />
       </AnimatePresence>
     </div>

@@ -47,12 +47,14 @@ interface EditPrizesModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   prizes: PriceItemType[];
+  type?: "standard" | "birthday";
 }
 
 export function EditPrizesModal({
   open,
   onOpenChange,
   prizes: pPrizes,
+  type = "standard",
 }: EditPrizesModalProps) {
   const router = useRouter();
   const sPrizes = pPrizes?.map((p, i) => {
@@ -124,19 +126,19 @@ export function EditPrizesModal({
       };
     });
     try {
-      await updatePrizes({ items: savingPrizes });
+      await updatePrizes({ items: savingPrizes }, type);
       router.refresh();
-      toast.success(
-        "Preis aktualisiert! 🎉 Ab sofort gelten die neuen Preise 💶✨",
-        {
-          style: {
-            background: "#f59e0b",
-            color: "white",
-            border: "none",
-          },
-          duration: 4000,
-        }
-      );
+      const successMessage = type === "birthday"
+        ? "Geburtstagspreise aktualisiert! 🎉🎂 Ab sofort gelten die neuen Geburtstagspreise ✨"
+        : "Preis aktualisiert! 🎉 Ab sofort gelten die neuen Preise 💶✨";
+      toast.success(successMessage, {
+        style: {
+          background: "#f59e0b",
+          color: "white",
+          border: "none",
+        },
+        duration: 4000,
+      });
     } catch (e) {
       console.log("error during update");
     } finally {
@@ -149,7 +151,7 @@ export function EditPrizesModal({
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto bg-black/95 border-white/30 text-white">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-white">
-            Preise bearbeiten
+            {type === "birthday" ? "Geburtstagspreise bearbeiten" : "Preise bearbeiten"}
           </DialogTitle>
         </DialogHeader>
 

@@ -13,8 +13,8 @@ async function AdminRegisteredPage() {
 
   const users = await getUsers();
   console.log("users", users);
-  const prices = await getPrices();
-  return <AdminRegistrationList users={users} prices={prices} />;
+  const { standard, birthday } = await getPrices();
+  return <AdminRegistrationList users={users} prices={standard} birthdayPrizes={birthday} />;
 }
 
 export default async function Serverpage() {

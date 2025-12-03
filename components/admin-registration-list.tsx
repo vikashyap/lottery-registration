@@ -32,15 +32,18 @@ import { EditPrizesModal } from "./edit-prizes-modal";
 export default function AdminRegistrationList({
   users,
   prices,
+  birthdayPrizes = [],
 }: {
   users: UserType[];
   prices: PriceItemType[];
+  birthdayPrizes?: PriceItemType[];
 }) {
   const [activeFilter, setActiveFilter] = useState<
     "all" | "claimed" | "unclaimed"
   >("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [isEditPrizesOpen, setIsEditPrizesOpen] = useState(false); // State for modal
+  const [isEditBirthdayPrizesOpen, setIsEditBirthdayPrizesOpen] = useState(false); // State for birthday modal
   const [viewMode, setViewMode] = useState<"card" | "table">("card"); // Added view state for toggling
 
   const [data, setData] = useState([]);
@@ -131,12 +134,12 @@ export default function AdminRegistrationList({
                   </Button>
 
                   <Button
-                    onClick={() => toast.info("Funktion kommt bald")}
+                    onClick={() => setIsEditBirthdayPrizesOpen(true)}
                     variant="outline"
                     className="backdrop-blur-xl bg-purple-500/10 border border-purple-500/30 text-white hover:bg-purple-500/20 hover:border-purple-500/50 hover:scale-105 transition-all duration-200 rounded-full px-3 md:px-4 py-2 text-xs md:text-sm shadow-lg"
                   >
-                    <Send size={16} className="md:mr-2" />
-                    <span className="hidden md:inline">Massen-E-Mail</span>
+                    <Gift size={16} className="md:mr-2" />
+                    <span className="hidden md:inline">Geburtstagspreise</span>
                   </Button>
                   <Button
                     onClick={() => {
@@ -477,6 +480,13 @@ export default function AdminRegistrationList({
         prizes={prices}
         open={isEditPrizesOpen}
         onOpenChange={setIsEditPrizesOpen}
+      />
+      
+      <EditPrizesModal
+        prizes={birthdayPrizes}
+        open={isEditBirthdayPrizesOpen}
+        onOpenChange={setIsEditBirthdayPrizesOpen}
+        type="birthday"
       />
     </main>
   );
